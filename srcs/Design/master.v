@@ -11,7 +11,8 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
 	output reg [addr_width-1:0] PADDR;
 	output reg [data_width-1:0] PWDATA;
 	output reg PWRITE, PSEL, PENABLE;
-  output reg [data_width-1:0] apb_read_data_out;
+	output reg [data_width-1:0] apb_read_data_out;
+	
 	localparam IDLE = 3'b001, SETUP = 3'b010, ACCESS = 3'b100;
   
 	// State registers
@@ -59,17 +60,17 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
 			end
 
 			SETUP: begin
-        	ns = ACCESS;
+				ns = ACCESS;
 			end
 
 			ACCESS: begin
-
-        if(PREADY && transfer)
-          ns = SETUP;
-
+				
+				if(PREADY && transfer)
+					ns = SETUP;
+				
 				else if(PREADY && !transfer)
 					ns = IDLE;
-
+				
 				else
 					ns = ACCESS;
 
@@ -82,20 +83,19 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
   
   // Output control logic based on state
 	always @(*) begin
-		
-    case(cs)
-      IDLE: begin
-        PSEL = 1'b0;
+		case(cs)
+			IDLE: begin
+				PSEL = 1'b0;
 				PENABLE = 1'b0;
 			end
 
 			SETUP: begin
-        PSEL = 1'b1;
+				PSEL = 1'b1;
 				PENABLE = 1'b0;
 			end
 
 			ACCESS: begin
-        PSEL = 1'b1;
+				PSEL = 1'b1;
 				PENABLE = 1'b1;        
 			end
 
