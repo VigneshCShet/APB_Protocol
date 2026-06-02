@@ -32,7 +32,6 @@ module slave_2_w#(parameter addr_width = 8, data_width = 8, depth = 256)(PCLK, P
     end
 		else begin
       if(SLV_PSEL && PENABLE) begin
-        //Prready <= 0;
         if(count == 2) begin
           Prready <= 1;
         
@@ -64,7 +63,7 @@ module slave_2_w#(parameter addr_width = 8, data_width = 8, depth = 256)(PCLK, P
   end
   always @(*) begin
     if(SLV_PSEL && PENABLE) begin
-      Prready = 0; //
+      Prready = 0; 
     end
   end
 
