@@ -11,14 +11,13 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
 	output reg [addr_width-1:0] PADDR;
 	output reg [data_width-1:0] PWDATA;
 	output reg PWRITE, PSEL, PENABLE;
-  output reg [data_width-1:0] apb_read_data_out;
+  	output reg [data_width-1:0] apb_read_data_out;
 	localparam IDLE = 3'b001, SETUP = 3'b010, ACCESS = 3'b100;
   
 	// State registers
 	reg [2:0] cs, ns;
 
 	assign PSLVERR = PSLVERR_MUX;
-	//assign apb_read_data_out = PRDATA;
 	
 	// State transition and output logic
 	always @(posedge PCLK or negedge PRESETn) begin
@@ -45,10 +44,6 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
 					PADDR    <= apb_read_paddr;				
 				end
 			end
-
-			/*if (cs == ACCESS && PREADY && !PWRITE) begin
-				apb_read_data_out <= PRDATA;
-			end*/
 		end
 	end
 
@@ -95,18 +90,13 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
 			end
 
 			SETUP: begin
-        PSEL = 1'b1;
+				PSEL = 1'b1;
 				PENABLE = 1'b0;
-        /*PWRITE = ~READ_WRITE;
-				PWDATA = apb_write_data;
-        if(!READ_WRITE)
-				  PADDR = apb_write_paddr;
-        else
-          PADDR = apb_read_paddr;	*/
+
 			end
 
 			ACCESS: begin
-        PSEL = 1'b1;
+				PSEL = 1'b1;
 				PENABLE = 1'b1;        
 			end
 
@@ -123,7 +113,7 @@ module master#(parameter addr_width = 9, data_width = 8)(PCLK, PRESETn, transfer
 			apb_read_data_out = PRDATA;
 		end
 		else
-		  apb_read_data_out = apb_read_data_out; // Hold previous value on error
+			apb_read_data_out = apb_read_data_out; // Hold previous value on error
 	end
 
 endmodule
